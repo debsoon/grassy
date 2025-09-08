@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Trigger Zora content coin creation if private key is configured
-    if (process.env.PRIVATE_KEY) {
+    if (process.env.ADMIN_WALLET_PRIVATE_KEY) {
       try {
         // Generate coin name and symbol from caption
         const coinName = `Grassy: ${submission.caption.slice(0, 30)}${submission.caption.length > 30 ? '...' : ''}`
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
           : `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}${submission.imageUrl}`
 
         const mintResult = await createContentCoin(
-          process.env.PRIVATE_KEY,
+          process.env.ADMIN_WALLET_PRIVATE_KEY,
           fullImageUrl,
           submission.caption,
           coinName,
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
           if (submission.submitterAddress && process.env.GRASSY_TOKEN_ADDRESS && process.env.ENABLE_REWARDS === 'true') {
             try {
               const rewardResult = await distributeGrassyRewards(
-                process.env.PRIVATE_KEY,
+                process.env.ADMIN_WALLET_PRIVATE_KEY,
                 submission.submitterAddress,
                 "20000", // 20,000 $GRASSY tokens reward
                 process.env.GRASSY_TOKEN_ADDRESS
